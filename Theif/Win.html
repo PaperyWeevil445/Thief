@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> You Win! </title>
+<script src="https://simplycodingcourses.com/files/simplyjs/simply.js"></script>
+<script>
+function start(){
+sjs.open();
+var menu_text = new sjs.Text("YOU WON!",40,"blue");
+menu_text.centerH();
+
+var startBtn = new sjs.Button("Retry", function(){
+window.location = "Thief";
+});
+
+
+var themeBtn = new sjs.Button("Theme", function(){
+window.location = "Theme.html";
+});
+
+
+startBtn.center();
+
+var info_text = new sjs.Text("Created By Steven Crandall",20,"green");
+
+info_text.bottom().centerH();
+
+}
+</script>
+</head>
+<body onload="start()">
+<h1> Thief </h1>
+
+<div id="target" style="margin:auto;background:springGreen;"></div>
+</body>
+</html>

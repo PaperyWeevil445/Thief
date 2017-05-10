@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title> Thief </title>
+<script src="https://simplycodingcourses.com/files/simplyjs/simply.js"></script>
+<script>
+function start(){
+sjs.open("target",800,500);
+
+//background Image
+var background = new sjs.Image("Images/background.jpg");
+background.setSize(800,500);
+//Main player
+
+var player = new sjs.Image("Images/badguy.png");
+player.type = "player"
+player.setSize(70,55);
+
+//Main player right
+sjs.keyDown(RIGHT_KEY, function(){ 
+player.setImage("Images/badguy.png");
+player.pushRight();
+});
+
+//Main player left
+sjs.keyDown(LEFT_KEY, function(){ 
+player.setImage("Images/badguy.png");
+player.pushLeft();
+});
+
+//main player up
+sjs.keyDown(UP_KEY, function(){ 
+player.setImage("Images/badguy.png");
+player.pushUp();
+});
+
+//main player down
+sjs.keyDown(DOWN_KEY, function(){ 
+player.setImage("Images/badguy.png");
+player.pushDown();
+}); 
+
+//player friction/acceloration
+player.friction = .1;
+player.accel = .5;
+
+// Crumbs Code
+setInterval(function(){
+var newCrumb = new sjs.Image("Images/vance.png");
+newCrumb.type = "vance";
+newCrumb.setGravity();
+newCrumb.centerH();
+newCrumb.noBounds = true;
+}, 5000);
+
+sjs.onHit("player","vance",function(x,y){
+x.grow(60,30);
+setTimeout(function(){
+x.grow(-60,-30);
+}, 4000);
+y.destroy();
+});
+
+
+//score
+var score = 0;
+var score_txt = new sjs.Text("Score: 0", 21, "lime");
+
+
+
+// Enemies
+setInterval(function(){
+	var speed = Math.floor(1 + Math.random()*10);
+if(Math.random() > 0.5){ 
+	var enemy = new sjs.Image("Images/coat1.png");
+	enemy.type = "enemy";
+	enemy.setSize(100,50);
+	enemy.noBounds = true;
+	enemy.friction = 0;
+	enemy.pushRight(speed);
+	enemy.scaleSize(.5 + Math.random() * 1.2);
+	enemy.moveTo(-enemy.getWidth(), Math.random()*(enemy.getClamp().y)); 
+	}  else{
+		var enemy = new sjs.Image("Images/coat2.png");
+		enemy.type = "enemy";
+		enemy.setSize(100,50);
+		enemy.noBounds = true;
+		enemy.friction = 0;
+		enemy.pushLeft(speed);
+		enemy.scaleSize(.5 + Math.random() * 1.2);
+		enemy.moveTo(sjs.getWidth(), Math.random()*(enemy.getClamp().y));
+
+
+	}
+},1000);
+
+sjs.left_screen.offset(-500);
+sjs.right_screen.offset(500);
+
+sjs.onHit("enemy",["right_screen","left_screen"], function(x,y){
+	x.destroy();
+}); 
+
+//On Hit
+sjs.onHit("player","enemy", function(x,y){ 
+if(x.getWidth() > y.getWidth() && 
+x.getHeight() > y.getHeight()) {
+	score = score + 1;
+	score_txt.setText("Score: "+score);
+	//localStorage.setItem("score", score);
+
+	x.grow(10,5);
+	if(score >= 20){
+	sjs.destroyAll("enemy");
+	window.location = "win.html";
+	}
+
+
+} else {
+	x.destroy();
+	window.location = "gameover.html";
+}
+	y.destroy();
+});
+
+
+
+
+
+} //end start
+</script>
+</head>
+<body onload="start()">
+<h1> Thief </h1>
+
+<div id="target" style="margin:auto;background:lime;"></div>
+</body>
+</html>
